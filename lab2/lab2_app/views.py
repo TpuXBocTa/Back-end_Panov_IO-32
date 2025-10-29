@@ -62,3 +62,41 @@ def drop_kind():
     if name is None:
         return {"error": "category not found"}, 404
     return {"result": f"id: {cid} successfully deleted", "category_name": name}, 200
+
+@app.get("/record/<int:record_id>")
+def read_entry(record_id: int):
+    record = Data.r_data.get(record_id)
+    if record is None:
+        return {"error": "record not found"}, 404
+    return {
+        "id": record_id,
+        "user_id": record["user_id"],
+        "category_id": record["category_id"],
+        "datetime": record["datetime"],
+        "amount": record["amount"],
+    }, 200
+
+@app.delete("/record/<int:record_id>")
+def drop_entry(record_id: int):
+    record = Data.r_data.pop(record_id, None)
+    if record is None:
+        return {"error": "record not found"}, 404
+    return {
+        "result": f"id: {record_id} successfully deleted",
+        "deleted": {"id": record_id, **record},
+    }, 200
+
+@app.post("/record")
+def create_entry():
+    body = request.get_json()
+    if not body or "user_id" not in body or "category_id" not in body or "datetime" not in body or "amount" not in body:
+        return {"error": " not enough record data"}, 400
+    rid = (max(Data.r_data.keys()) + 1) if Data.r_data else 1
+    data = {
+        "user_id": int(body["user_id"]),
+        "category_id": int(body["category_id"]),
+        "datetime": body["datetime"],
+        "amount": float(body["amount"]),
+    }
+    Data.r_data[rid] = data
+    return {"record_id": rid, **data}, 201
