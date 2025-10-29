@@ -38,3 +38,27 @@ def drop_person(user_id: int):
     if name is None:
         return {"error": "user not found"}, 404
     return {"result": f"id: {user_id} successfully deleted", "user_name": name}, 200
+
+@app.get("/category")
+def read_kinds():
+    return [{"id": i, "category_name": n} for i, n in Data.c_data.items()], 200
+
+@app.post("/category")
+def create_kind():
+    body = request.get_json()
+    if not body or "name" not in body:
+        return {"error": " not enough user data"}, 400
+    cid = (max(Data.c_data.keys()) + 1) if Data.c_data else 1
+    Data.c_data[cid] = body["name"]
+    return {"id": cid, "category_name": body["name"]}, 201
+
+@app.delete("/category")
+def drop_kind():
+    body = request.get_json()
+    if not body or "id" not in body:
+        return {"error": " incorrect id to delete category_data"}, 400
+    cid = int(body["id"])
+    name = Data.c_data.pop(cid, None)
+    if name is None:
+        return {"error": "category not found"}, 404
+    return {"result": f"id: {cid} successfully deleted", "category_name": name}, 200
