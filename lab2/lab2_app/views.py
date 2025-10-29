@@ -100,3 +100,17 @@ def create_entry():
     }
     Data.r_data[rid] = data
     return {"record_id": rid, **data}, 201
+
+@app.get("/record")
+def query_entries():
+    uid = request.args.get("user_id", type=int)
+    cid = request.args.get("category_id", type=int)
+    if uid is None and cid is None:
+        return {"error": "provide user_id and/or category_id"}, 400
+    items = [
+        {"id": i, **rec}
+        for i, rec in Data.r_data.items()
+        if (uid is None or rec["user_id"] == uid)
+        and (cid is None or rec["category_id"] == cid)
+    ]
+    return {"items": items, "counter": len(items)}, 200
