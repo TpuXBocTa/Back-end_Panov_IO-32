@@ -1,5 +1,7 @@
 from lab2_app import app
 from datetime import datetime
+from . import Data
+from . import app
 
 @app.route("/")
 def hello_world():
