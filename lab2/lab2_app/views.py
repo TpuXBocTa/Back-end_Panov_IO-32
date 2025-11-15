@@ -1,4 +1,4 @@
-from lab1_app import app
+from lab2_app import app
 from datetime import datetime
 
 @app.route("/")
