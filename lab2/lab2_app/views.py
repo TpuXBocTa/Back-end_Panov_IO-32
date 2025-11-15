@@ -1,7 +1,7 @@
-from lab2_app import app
 from datetime import datetime
-from . import Data
+from flask import request
 from . import app
+from . import Data
 
 @app.route("/")
 def hello_world():
