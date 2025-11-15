@@ -3,4 +3,4 @@ WORKDIR /app
 COPY requirements.txt .
 RUN python -m pip install -r requirements.txt
 COPY . /app
-CMD ["bash","-c","flask --app lab1_app run --host=0.0.0.0 --port=$PORT"]
+CMD ["bash","-c","flask --app lab2_app run --host=0.0.0.0 --port=$PORT"]
